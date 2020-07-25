@@ -1,0 +1,314 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="table-responsive table-upgrade">
+          <table class="table">
+            <tbody>
+            <tr>
+              <td class="text-left">
+                <h4 class="card-title">Productos</h4>
+              </td>
+              <td class="text-center"></td>
+              <td class="text-right">
+                <button data-toggle="modal" data-target="#editModal" (click)='open(content, false, null)'
+                        class="btn btn-primary btn-round">Nuevo
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="text-success">
+            <th *ngFor="let hr of headerRow" class="text-left">
+              {{hr}}
+            </th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let dr of dataRows">
+              <td class="text-left">
+                {{dr.id}}
+              </td>
+              <td class="text-left">
+                {{dr.nombre}}
+              </td>
+              <td class="text-left">
+                {{dr.referencia}}
+              </td>
+              <td class="text-left">
+                {{dr.categoria}}
+              </td>
+              <td class="text-left">
+                {{dr.precio}}
+              </td>
+              <td class="text-center">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i ngbTooltip="Editar" tooltipClass="my-custom-class"
+                         class="nc-icon nc-ruler-pencil text-success" (click)='open(edit, true, dr)'></i>
+                    </div>
+                  </div>
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i ngbTooltip="Eliminar" tooltipClass="my-custom-class"
+                         class="nc-icon nc-simple-remove text-danger" (click)='deleteRow(dr)'></i>
+                    </div>
+                  </div>
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-warning">
+                      <i ngbTooltip="Vender" tooltipClass="my-custom-class"
+                         class="nc-icon nc-basket text-primary" (click)='openVenta(vender, dr)'></i>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Record Modal Window -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title-i">Ingresar Producto</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="card card-user">
+        <div class="card-body">
+          <form [formGroup]="register">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input type="text" class="form-control" placeholder="Nombre" formControlName="nombre">
+                  <div *ngIf="register.get('nombre').hasError('required') ||
+                                  register.get('nombre').hasError('pattern')"
+                       class="alert alert-danger">
+                    Ingrese un nombre de producto válido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Referencia</label>
+                  <input type="text" class="form-control" placeholder="Referencia" formControlName="referencia">
+                  <div *ngIf="register.get('referencia').hasError('required') ||
+                                  register.get('referencia').hasError('pattern')"
+                       class="alert alert-danger">
+                    Ingrese una referencia válida
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-1">
+                <div class="form-group">
+                  <label>Precio</label>
+                  <input type="number" class="form-control" placeholder="Precio" formControlName="precio">
+                  <div *ngIf="register.get('precio').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese un precio válido
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 pl-1">
+                <div class="form-group">
+                  <label>Peso</label>
+                  <input type="number" class="form-control" placeholder="Peso" formControlName="peso">
+                  <div *ngIf="register.get('peso').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese un peso válido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-1">
+                <div class="form-group">
+                  <label>Categoria</label>
+                  <input type="text" class="form-control" placeholder="Categoria" formControlName="categoria">
+                  <div *ngIf="register.get('categoria').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese una categoria válida
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 pl-1">
+                <div class="form-group">
+                  <label>stock</label>
+                  <input type="number" class="form-control" placeholder="Stock" formControlName="stock">
+                  <div *ngIf="register.get('stock').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese un stock válido
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="update ml-auto mr-auto">
+        <button type="button" class="btn btn-primary btn-round" [disabled]="!register.valid"
+                (click)="onAddRowSave(register)">Guardar</button>
+      </div>
+    </div>
+  </ng-template>
+  <!-- End -->
+  <!-- Edit Record Modal Window -->
+  <ng-template #edit let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title-m">Actualizar Producto</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="card card-user">
+        <div class="card-body">
+          <form [formGroup]="editForm">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input type="text" class="form-control" placeholder="Nombre" formControlName="nombre">
+                  <div *ngIf="editForm.get('nombre').hasError('required') ||
+                                  editForm.get('nombre').hasError('pattern')"
+                       class="alert alert-danger">
+                    Ingrese un nombre de producto válido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Referencia</label>
+                  <input type="text" class="form-control" placeholder="Referencia" formControlName="referencia">
+                  <div *ngIf="editForm.get('referencia').hasError('required') ||
+                                  editForm.get('referencia').hasError('pattern')"
+                       class="alert alert-danger">
+                    Ingrese una referencia válida
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-1">
+                <div class="form-group">
+                  <label>Precio</label>
+                  <input type="number" class="form-control" placeholder="Precio" formControlName="precio">
+                  <div *ngIf="editForm.get('precio').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese un precio válido
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 pl-1">
+                <div class="form-group">
+                  <label>Peso</label>
+                  <input type="number" class="form-control" placeholder="Peso" formControlName="peso">
+                  <div *ngIf="editForm.get('peso').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese un peso válido
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 pr-1">
+                <div class="form-group">
+                  <label>Categoria</label>
+                  <input type="text" class="form-control" placeholder="Categoria" formControlName="categoria">
+                  <div *ngIf="editForm.get('categoria').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese una categoria válida
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 pl-1">
+                <div class="form-group">
+                  <label>stock</label>
+                  <input type="number" class="form-control" placeholder="Stock" formControlName="stock">
+                  <div *ngIf="editForm.get('stock').hasError('required')"
+                       class="alert alert-danger">
+                    Ingrese un stock válido
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="update ml-auto mr-auto">
+        <button type="button" class="btn btn-primary btn-round" [disabled]="!editForm.valid"
+                (click)="onEditSave(editForm)">Guardar</button>
+      </div>
+    </div>
+  </ng-template>
+  <!-- End -->
+
+  <!-- vender Modal Window -->
+  <ng-template #vender let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title-v">Venta Producto</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="card card-user">
+        <div class="card-body">
+          <div class="card-footer">
+            <hr>
+            <div class="button-container">
+              <div class="row">
+                <div class="col-lg-4 col-md-6 col-6 ml-auto mr-auto">
+                  <h5>{{nombreProducto}}
+                    <br>
+                    <small>Producto</small>
+                  </h5>
+                </div>
+                <div class="col-lg-3 mr-auto">
+                  <h5>${{precioProducto}}
+                    <br>
+                    <small>Precio</small>
+                  </h5>
+                </div>
+                <div class="col-lg-3 mr-auto">
+                  <h5>{{stockProducto}}
+                    <br>
+                    <small>Stock</small>
+                  </h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="update ml-auto mr-auto">
+        <button type="button" class="btn btn-primary btn-round" [disabled]="stockProducto < 1"
+                (click)="onVentaSave()">Vender</button>
+      </div>
+    </div>
+  </ng-template>
+  <!-- End -->
+
+</div>
